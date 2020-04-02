@@ -7,7 +7,7 @@ import expression.generic.Biba;
 
 public class ExpressionParser<T> extends BaseParser implements Parser {
     private Operator currOperator = Operator.CLOSE_BRACKET;
-    private static final int highestLevel = 3;
+    private static final int highestLevel = 4;
     private static final int lowestLevel = 0;
 
 
@@ -24,7 +24,9 @@ public class ExpressionParser<T> extends BaseParser implements Parser {
             Operator.ADD, 2,
             Operator.SUB, 2,
             Operator.RIGHT_SHIFT, 3,
-            Operator.LEFT_SHIFT, 3
+            Operator.LEFT_SHIFT, 3,
+            Operator.MIN, 4,
+            Operator.MAX, 4
     ));
 
     private static final Map<String, Operator> OPERATORS = new HashMap<>(Map.of(
@@ -34,7 +36,9 @@ public class ExpressionParser<T> extends BaseParser implements Parser {
             "-", Operator.SUB,
             ">>", Operator.RIGHT_SHIFT,
             "<<", Operator.LEFT_SHIFT,
-            ")", Operator.CLOSE_BRACKET
+            ")", Operator.CLOSE_BRACKET,
+            "in", Operator.MIN,
+            "ax", Operator.MAX
     ));
 
     
@@ -47,7 +51,9 @@ public class ExpressionParser<T> extends BaseParser implements Parser {
             '-', "-",
             '<', "<<",
             '>', ">>",
-            ')', ")"
+            ')', ")",
+            'i', "in",
+            'a', "ax"
     ));
 
     @Override
@@ -76,14 +82,13 @@ public class ExpressionParser<T> extends BaseParser implements Parser {
         StringBuilder val = new StringBuilder(isNegative ? "-" : "");
         while (between('0', '9')) {
             val.append(curr);
-            // System.out.println("read " + curr + " as const");
             nextChar();
 
         }
         testOperator();
 
         try {
-            return new Const<T>(changeMe.parse(val.toString()));
+            return new Const<T>(changeMe.parse(val.toString()), changeMe);
         } catch (NumberFormatException e) {
             throw error("Illegal constant: '" + val.toString() + "'");
         }
@@ -92,7 +97,6 @@ public class ExpressionParser<T> extends BaseParser implements Parser {
     private Variable getVariable() {
         StringBuilder var = new StringBuilder();
         while (!testOperator()) {
-            // System.out.println("read " + curr + " as var");
             var.append(curr);
             nextChar();
         }
@@ -107,6 +111,9 @@ public class ExpressionParser<T> extends BaseParser implements Parser {
                 // return Negate.getCompressedNegate(getExpression(lowestLevel));
                 return new Negate<T>(getExpression(lowestLevel), changeMe);
             }
+        } else if (test('c')) {
+            expect("ount");
+            return new Count<T>(getExpression(lowestLevel), changeMe);
         } else if (test('(')) {
             return getExpression(highestLevel);
         } else if (between('0', '9')) {
@@ -121,16 +128,18 @@ public class ExpressionParser<T> extends BaseParser implements Parser {
             getOperator();
             return true;
         }
+        if (test('m')) {
+            getOperator();
+            return true;
+        }
         return false;
     }
 
     private void getOperator() {
         String operator = CHAR_TO_STRING.get(curr);
         expect(operator);
-        // System.out.println("read " + operator + " as operator");
 
         currOperator = OPERATORS.get(operator);
-        // System.out.println("new operator: " + currOperator);
     }
 
     private TripleExpression<T> makeExpression(Operator operator, TripleExpression<T> first, TripleExpression<T> second) {
@@ -143,6 +152,10 @@ public class ExpressionParser<T> extends BaseParser implements Parser {
                 return new Subtract<T>(first, second, changeMe);
             case DIV:
                 return new Divide<T>(first, second, changeMe);
+            case MIN:
+                return new Min<T>(first, second, changeMe);
+            case MAX:
+                return new Max<T>(first, second, changeMe);
             default:
                 throw new IllegalStateException("Unsupported operator" + operator);
         }

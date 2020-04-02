@@ -6,6 +6,10 @@ public class Divide<T> extends AbstractBinOperation<T> {
         super(first, second, changeMe);
     }
 
+    protected String getSign() {
+        return "/";
+    }
+
     @Override
     protected T calculate(T first, T second) {
         return changeMe.div(first, second);

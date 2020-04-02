@@ -8,6 +8,11 @@ public class Negate<T> extends AbstractUnOperation<T> {
         super(expression, changeMe);
     }
 
+
+    protected String getSign() {
+        return "-";
+    }
+
     @Override
     protected T calculate(T val) {
         return changeMe.mul(changeMe.parse("-1"), val);

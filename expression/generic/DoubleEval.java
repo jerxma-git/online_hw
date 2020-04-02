@@ -25,7 +25,25 @@ public class DoubleEval implements Biba<Double> {
         return -a;
     }
 
+    public Double min(Double a, Double b) {
+        return Double.min(a, b);
+    }
+
+    public Double max(Double a, Double b) {
+        return Double.max(a, b);
+    }
+
+    public Double cnt(Double a) {
+        return Double.valueOf(Long.bitCount(Double.doubleToLongBits(a)));
+    }
+
     public Double parse(int val) {
         return Double.valueOf(val);
     }
+
+    public String toString(Double val) {
+        return val.toString();
+    }
+
+    
 }

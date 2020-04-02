@@ -8,7 +8,7 @@ import expression.parser.ExpressionParser;
 public class GenericTabulator implements Tabulator {
 
     private static final Map<String, Biba<?>> EVALUATORS = Map.of(
-        "i", new IntEval(),
+        "i", new CheckedIntEval(),
         "d", new DoubleEval(),
         "bi", new BigIntEval()
     );
@@ -28,11 +28,11 @@ public class GenericTabulator implements Tabulator {
         for (int i = 0; i <= x2 - x1; i++) {
             for (int j = 0; j <= y2 - y1; j++) {
                 for (int k = 0; k <= z2 - z1; k++) {
-                    // try {
+                    try {
                         result[i][j][k] = exp.evaluate(evaluator.parse(x1 + i), evaluator.parse(y1 + j), evaluator.parse(z1 + k));
-                    // } catch(Exception e) {
-                    //     result[i][j][k] = null;
-                    // }
+                    } catch(ArithmeticException e) {
+                        result[i][j][k] = null;
+                    }
                 }
             }   
         }

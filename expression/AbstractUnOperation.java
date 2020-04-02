@@ -9,7 +9,14 @@ public abstract class AbstractUnOperation<T> implements TripleExpression<T> {
         this.changeMe = changeMe;
     }
 
+    protected abstract String getSign();
+
     protected abstract T calculate(T val);
+
+    @Override
+    public String toString() {
+        return getSign() + "(" + expression.toString() + ")";
+    }
 
     @Override
     public T evaluate(T x, T y, T z) {

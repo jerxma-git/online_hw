@@ -27,7 +27,23 @@ public class BigIntEval implements Biba<BigInteger> {
         return a.negate();
     }
 
+    public BigInteger min(BigInteger a, BigInteger b) {
+        return a.min(b);
+    }
+
+    public BigInteger max(BigInteger a, BigInteger b) {
+        return a.max(b);
+    }
+
+    public BigInteger cnt(BigInteger a) {
+        return parse(a.bitCount());
+    }
+
     public BigInteger parse(int val) {
         return BigInteger.valueOf(val);
+    }
+
+    public String toString(BigInteger val) {
+        return val.toString();
     }
 }

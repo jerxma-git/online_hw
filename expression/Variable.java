@@ -20,4 +20,8 @@ public class Variable<T> implements TripleExpression<T> {
                         "' is not supported. Failed to evaluate");
         }
     }
+
+    public String toString() {
+        return varName;
+    }
 }

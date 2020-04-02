@@ -5,6 +5,10 @@ public interface Biba<T> {
     T mul(T f, T s);
     T div(T f, T s);
     T neg(T f);
+    T cnt(T f); 
+    T min(T f, T s);
+    T max(T f, T s);
     T parse(String valStr);
     T parse(int val);
+    String toString(T val);
 }

@@ -1,8 +1,9 @@
 package expression;
+
 import expression.generic.*;
 
-public class Add<T> extends AbstractBinOperation<T> {
-    public Add(TripleExpression<T> first, TripleExpression<T> second, Biba<T> changeMe) {
+public class Max<T> extends AbstractBinOperation<T> {
+    public Max(TripleExpression<T> first, TripleExpression<T> second, Biba<T> changeMe) {
         super(first, second, changeMe);
     }
 
@@ -12,7 +13,7 @@ public class Add<T> extends AbstractBinOperation<T> {
 
     @Override
     protected T calculate(T first, T second) {
-        return changeMe.add(first, second);
+        return changeMe.max(first, second);
     }
 
     
